@@ -1,5 +1,6 @@
 import { useRef } from 'react'
 import BackgroundVideo from '../../components/background-video/BackgroundVideo'
+import FAQ from '../../components/faq/FAQ'
 import GuestReviews from '../../components/guest-reviews/GuestReviews'
 import LocalConditions from '../../components/local-conditions/LocalConditions'
 import LocationMap from '../../components/location-map/LocationMap'
@@ -40,6 +41,7 @@ export default function HomePage({ rooms, onDetails, onReserve, setView }) {
 
     <section className="bg-[#253c32] px-5 py-16 text-white sm:py-20"><div className="mx-auto grid max-w-7xl gap-8 sm:grid-cols-3 lg:px-5">{[['01','Made for unwinding','Thoughtful comfort for work trips, weekends, and longer stays.'],['02','Room for your rhythm','A private place to settle into your own routine.'],['03','Local, helpful hosting','A real host to help with the details of your Abuja stay.']].map(([n,title,copy],i)=><Reveal key={n} delay={i*90} className="border-t border-white/20 pt-5"><p className="text-[10px] tracking-[.18em] text-white/55">{n}</p><h3 className="mt-4 font-[Playfair_Display] text-2xl">{title}</h3><p className="mt-2 text-sm leading-6 text-white/70">{copy}</p></Reveal>)}</div></section>
     <div id="location"><LocationMap/></div>
+    <FAQ />
     <GuestReviews/>
   </>
 }

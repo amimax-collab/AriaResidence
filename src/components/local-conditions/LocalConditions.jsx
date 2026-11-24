@@ -36,10 +36,8 @@ export default function LocalConditions() {
   }, [])
 
   const time = new Intl.DateTimeFormat('en-GB', { timeZone: 'Africa/Lagos', hour: '2-digit', minute: '2-digit', hour12: true }).format(now)
-  return <aside aria-label="Abuja local time and weather" className="absolute right-5 top-5 z-10 w-48 border border-white/25 bg-black/25 p-4 text-white shadow-lg backdrop-blur-md sm:right-10 sm:top-8 sm:w-56">
-    <p className="text-[9px] uppercase tracking-[.22em] text-white/70">Abuja / local time</p>
-    <p className="mt-1 font-[Playfair_Display] text-3xl tabular-nums">{time}</p>
-    <p className="mt-3 border-t border-white/20 pt-3 text-sm">{weather ? `${Math.round(weather.temperature_2m)}${String.fromCharCode(176)}C / ${weatherName(weather.weather_code)}` : weatherError ? 'Weather unavailable' : 'Loading weather...'}</p>
-    {weather?.apparent_temperature != null && <p className="mt-1 text-[10px] text-white/65">Feels like {Math.round(weather.apparent_temperature)}{String.fromCharCode(176)}C / <a href="https://open-meteo.com/en/license" target="_blank" rel="noreferrer" className="underline underline-offset-2">Open-Meteo</a></p>}
+  return <aside aria-label="Abuja local time and weather" className="absolute right-4 top-3 z-10 rounded-full border border-white/20 bg-black/25 px-3 py-2 text-white shadow-sm backdrop-blur-md sm:right-8 sm:top-4 sm:px-4">
+    <div className="flex items-center gap-2 sm:gap-3"><span className="font-[Playfair_Display] text-base tabular-nums sm:text-lg">{time}</span><span aria-hidden="true" className="h-4 w-px bg-white/30"/><span className="text-[10px] sm:text-xs">{weather ? `${Math.round(weather.temperature_2m)}°C · ${weatherName(weather.weather_code)}` : weatherError ? 'Weather unavailable' : 'Weather loading'}</span></div>
+    {weather?.apparent_temperature != null && <p className="mt-1 text-right text-[9px] text-white/60">Feels {Math.round(weather.apparent_temperature)}°C · <a href="https://open-meteo.com/en/license" target="_blank" rel="noreferrer" className="underline underline-offset-2">Open-Meteo</a></p>}
   </aside>
 }

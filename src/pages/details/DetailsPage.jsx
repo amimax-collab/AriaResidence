@@ -1,12 +1,29 @@
+import DatePicker from '../../components/date-picker/DatePicker'
 import { formatNaira } from '../../data/rooms'
 
+const facilities = ['Smart TV', 'Netflix', 'YouTube', 'Wi-Fi', 'Workspace', 'Air conditioning', 'Parking', 'Kitchen']
+
 export default function DetailsPage({ room, checkIn, checkOut, setCheckIn, setCheckOut, guests, setGuests, today, notice, onReserve, setView }) {
-  return <main className="mx-auto max-w-7xl px-5 py-12 lg:px-10"><button onClick={() => setView('stays')} className="mb-7 text-xs text-[#72766f]">&lt;- All residences</button><div className="grid gap-10 md:grid-cols-[1.4fr_1fr]">
-    <div><img src={room.image} alt={room.name} className="h-[360px] w-full object-cover sm:h-[520px]"/><h1 className="mt-8 font-[Playfair_Display] text-4xl">{room.name}</h1><p className="mt-3 text-sm text-[#77786f]">{room.type} · Abuja · up to {room.guests} guests</p><p className="mt-4 max-w-2xl text-sm leading-7 text-[#656b63]">{room.note} Enjoy fast Wi-Fi, air conditioning, a fully equipped kitchen, reliable power and a dedicated local host.</p></div>
-    <aside className="h-fit border border-black/10 bg-white p-6 sm:p-8"><p className="text-[10px] uppercase tracking-[.2em] text-[#85877d]">Your stay</p><p className="mt-2"><span className="font-[Playfair_Display] text-2xl">{formatNaira(room.rate)}</span><span className="text-xs text-[#77786f]"> / night</span></p>
-      <div className="mt-6 grid grid-cols-2 gap-3"><label className="text-[9px] uppercase tracking-[.14em] text-[#77786f]">Check in<input min={today} type="date" value={checkIn} onChange={(e) => setCheckIn(e.target.value)} className="mt-2 block w-full border-b border-black/15 bg-transparent py-2 text-xs normal-case tracking-normal"/></label><label className="text-[9px] uppercase tracking-[.14em] text-[#77786f]">Check out<input min={checkIn || today} type="date" value={checkOut} onChange={(e) => setCheckOut(e.target.value)} className="mt-2 block w-full border-b border-black/15 bg-transparent py-2 text-xs normal-case tracking-normal"/></label></div>
-      <label className="mt-4 block text-[9px] uppercase tracking-[.14em] text-[#77786f]">Guests<select value={guests} onChange={(e) => setGuests(Number(e.target.value))} className="mt-2 block w-full border-b border-black/15 bg-transparent py-2 text-xs normal-case tracking-normal">{Array.from({length: room.guests}, (_, i) => i + 1).map((n) => <option key={n} value={n}>{n} guest{n > 1 ? 's' : ''}</option>)}</select></label>
-      {notice && <p className="mt-4 text-xs text-red-700">{notice}</p>}<button onClick={onReserve} className="mt-6 w-full rounded-full bg-[#253c32] px-6 py-4 text-xs text-white">Reserve this residence -&gt;</button><p className="mt-4 text-center text-xs text-[#77786f]">No payment is taken here</p>
-    </aside>
-  </div></main>
+  return <main className="mx-auto max-w-7xl px-5 py-10 lg:px-10">
+    <button onClick={() => setView('stays')} className="mb-7 text-xs text-[#72766f]">&larr; All residences</button>
+    <div className="grid gap-10 lg:grid-cols-[1.25fr_.75fr]">
+      <section>
+        <img src={room.image} alt={room.name} className="h-[300px] w-full rounded-2xl object-cover sm:h-[490px]" />
+        <p className="mt-7 text-[10px] uppercase tracking-[.2em] text-[#85877d]">{room.type} / Apo, Abuja</p>
+        <h1 className="mt-2 font-[Playfair_Display] text-4xl sm:text-5xl">{room.name}</h1>
+        <p className="mt-4 max-w-2xl text-sm leading-7 text-[#656b63]">{room.note} Settle in with thoughtful comforts for a restful stay, focused work, and easy evenings in Abuja.</p>
+        <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-4">{facilities.map((item) => <div key={item} className="border border-black/10 bg-white px-4 py-4 text-xs">{item}</div>)}</div>
+        <div className="mt-8 grid gap-4 sm:grid-cols-3">{[[`${room.guests} guests`, 'Maximum occupancy'], [`${room.beds} bed${room.beds > 1 ? 's' : ''}`, 'Sleeping space'], [`${room.baths} bathroom${room.baths > 1 ? 's' : ''}`, 'Private bathroom']].map(([title, label]) => <div key={label} className="border-t border-black/10 pt-4"><p className="font-[Playfair_Display] text-xl">{title}</p><p className="mt-1 text-xs text-[#77786f]">{label}</p></div>)}</div>
+      </section>
+      <aside className="h-fit rounded-2xl border border-black/10 bg-white p-5 sm:p-7 lg:sticky lg:top-6">
+        <p className="text-[10px] uppercase tracking-[.2em] text-[#85877d]">Your stay</p>
+        <p className="mt-2"><span className="font-[Playfair_Display] text-3xl">{formatNaira(room.rate)}</span><span className="text-xs text-[#77786f]"> / night</span></p>
+        <DatePicker checkIn={checkIn} checkOut={checkOut} setCheckIn={setCheckIn} setCheckOut={setCheckOut} today={today} />
+        <label className="mt-5 block text-[9px] uppercase tracking-[.14em] text-[#77786f]">Guests<select value={guests} onChange={(event) => setGuests(Number(event.target.value))} className="mt-2 block w-full border-b border-black/15 bg-transparent py-3 text-sm normal-case tracking-normal">{Array.from({ length: room.guests }, (_, index) => index + 1).map((count) => <option key={count} value={count}>{count} guest{count > 1 ? 's' : ''}</option>)}</select></label>
+        {notice && <p className="mt-4 text-xs text-red-700">{notice}</p>}
+        <button onClick={onReserve} className="mt-6 w-full rounded-full bg-[#253c32] px-6 py-4 text-xs text-white transition hover:bg-[#385346]">Reserve this residence &rarr;</button>
+        <p className="mt-4 text-center text-xs text-[#77786f]">No payment is taken at this step.</p>
+      </aside>
+    </div>
+  </main>
 }

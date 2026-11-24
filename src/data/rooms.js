@@ -1,4 +1,4 @@
-export const rooms = [
+﻿export const rooms = [
   { id: 'aria-studio', name: 'Aria Studio', type: 'Studio', guests: 2, beds: 1, baths: 1, rate: 60000, image: 'https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=1000&q=85', note: 'A calm, considered space for one or two.' },
   { id: 'classic-one-bed', name: 'Classic One Bedroom', type: 'One bedroom', guests: 2, beds: 1, baths: 1, rate: 85000, image: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1000&q=85', note: 'A comfortable home base with room to settle in.' },
   { id: 'deluxe-one-bed', name: 'Deluxe One Bedroom', type: 'One bedroom', guests: 2, beds: 1, baths: 1, rate: 105000, image: 'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1000&q=85', note: 'More room, extra light, and a little more luxury.' },
@@ -13,7 +13,7 @@ export const extras = [
   { id: 'late-checkout', name: 'Late check-out', rate: 25000 },
 ]
 
-export const formatNaira = (amount) => `₦${Number(amount).toLocaleString('en-NG')}`
+export const formatNaira = (amount) => `\u20a6${Number(amount).toLocaleString('en-NG')}`
 
 export function isAvailable(roomId, checkIn, checkOut) {
   if (!checkIn || !checkOut) return true

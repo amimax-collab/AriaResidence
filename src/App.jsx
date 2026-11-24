@@ -24,7 +24,7 @@ export default function App() {
   const [guest, setGuest] = useState({ name: '', email: '', phone: '', idType: 'National ID (NIN)', idNumber: '' })
   const [idFile, setIdFile] = useState(null)
   const [selectedExtras, setSelectedExtras] = useState([])
-  const [today] = useState(() => new Date().toISOString().slice(0, 10))
+  const [today] = useState(() => new Intl.DateTimeFormat('en-CA', { timeZone: 'Africa/Lagos', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date()))
 
   const nights = useMemo(() => checkIn && checkOut ? Math.max(0, (Date.parse(checkOut) - Date.parse(checkIn)) / 86400000) : 0, [checkIn, checkOut])
   const total = room.rate * nights + selectedExtras.reduce((sum, id) => sum + (extras.find((item) => item.id === id)?.rate || 0), 0)

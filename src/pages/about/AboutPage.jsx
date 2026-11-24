@@ -1,0 +1,3 @@
+export default function AboutPage({ setView }) {
+  return <main className="mx-auto min-h-[65vh] max-w-4xl px-5 py-20"><p className="text-[10px] uppercase tracking-[.2em] text-[#85877d]">Our story</p><h1 className="mt-3 font-[Playfair_Display] text-5xl leading-tight">A good stay is more than a place to sleep.</h1><p className="mt-8 max-w-2xl text-base leading-8 text-[#656b63]">Aria Residence is a collection of considered homes for the way you really travel. Thoughtful spaces, warm local hosting, and room for your days to unfold at their own pace in Abuja.</p><button onClick={() => setView('stays')} className="mt-8 rounded-full bg-[#253c32] px-7 py-4 text-xs text-white">Discover our residences -&gt;</button></main>
+}

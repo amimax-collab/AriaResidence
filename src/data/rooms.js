@@ -15,14 +15,30 @@ export const extras = [
 
 export const formatNaira = (amount) => `\u20a6${Number(amount).toLocaleString('en-NG')}`
 
+const getLocalRecords = (key) => {
+  try { return JSON.parse(localStorage.getItem(key) || '[]') } catch { return [] }
+}
+
+export function isRoomDateOccupied(roomId, date) {
+  const bookings = getLocalRecords('aria-bookings').filter((item) => String(item.status || '').toLowerCase() !== 'cancelled')
+  const blocked = getLocalRecords('aria-blocked')
+  return [...bookings, ...blocked].some((item) => {
+    const start = item.checkIn || item.from
+    const end = item.checkOut || item.to
+    const belongsToRoom = item.unitId === roomId || item.roomId === roomId
+    return belongsToRoom && start && end && start <= date && date < end
+  })
+}
+
 export function isAvailable(roomId, checkIn, checkOut) {
   if (!checkIn || !checkOut) return true
-  const bookings = JSON.parse(localStorage.getItem('aria-bookings') || '[]')
-  const blocked = JSON.parse(localStorage.getItem('aria-blocked') || '[]')
+  const bookings = getLocalRecords('aria-bookings').filter((item) => String(item.status || '').toLowerCase() !== 'cancelled')
+  const blocked = getLocalRecords('aria-blocked')
   return ![...bookings, ...blocked].some((item) => {
     const start = item.checkIn || item.from
     const end = item.checkOut || item.to
-    return (item.unitId === roomId || item.roomId === roomId) && checkIn < end && checkOut > start
+    const belongsToRoom = item.unitId === roomId || item.roomId === roomId
+    return belongsToRoom && start && end && checkIn < end && checkOut > start
   })
 }
 

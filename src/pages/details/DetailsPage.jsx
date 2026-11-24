@@ -18,7 +18,7 @@ export default function DetailsPage({ room, checkIn, checkOut, setCheckIn, setCh
       <aside className="h-fit rounded-2xl border border-black/10 bg-white p-5 sm:p-7 lg:sticky lg:top-6">
         <p className="text-[10px] uppercase tracking-[.2em] text-[#85877d]">Your stay</p>
         <p className="mt-2"><span className="font-[Playfair_Display] text-3xl">{formatNaira(room.rate)}</span><span className="text-xs text-[#77786f]"> / night</span></p>
-        <DatePicker checkIn={checkIn} checkOut={checkOut} setCheckIn={setCheckIn} setCheckOut={setCheckOut} today={today} />
+        <DatePicker roomId={room.id} checkIn={checkIn} checkOut={checkOut} setCheckIn={setCheckIn} setCheckOut={setCheckOut} today={today} />
         <label className="mt-5 block text-[9px] uppercase tracking-[.14em] text-[#77786f]">Guests<select value={guests} onChange={(event) => setGuests(Number(event.target.value))} className="mt-2 block w-full border-b border-black/15 bg-transparent py-3 text-sm normal-case tracking-normal">{Array.from({ length: room.guests }, (_, index) => index + 1).map((count) => <option key={count} value={count}>{count} guest{count > 1 ? 's' : ''}</option>)}</select></label>
         {notice && <p className="mt-4 text-xs text-red-700">{notice}</p>}
         <button onClick={onReserve} className="mt-6 w-full rounded-full bg-[#253c32] px-6 py-4 text-xs text-white transition hover:bg-[#385346]">Reserve this residence &rarr;</button>

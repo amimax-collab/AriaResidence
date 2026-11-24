@@ -1,9 +1,10 @@
 import { useState } from 'react'
+import { isAvailable, isRoomDateOccupied } from '../../data/rooms'
 
 const pad = (value) => String(value).padStart(2, '0')
 const toISO = (year, month, day) => `${year}-${pad(month + 1)}-${pad(day)}`
 
-export default function DatePicker({ checkIn, checkOut, setCheckIn, setCheckOut, today }) {
+export default function DatePicker({ roomId, checkIn, checkOut, setCheckIn, setCheckOut, today }) {
   const [month, setMonth] = useState(() => {
     const value = (checkIn || today).split('-').map(Number)
     return new Date(value[0], value[1] - 1, 1)
@@ -23,6 +24,12 @@ export default function DatePicker({ checkIn, checkOut, setCheckIn, setCheckOut,
     setCheckOut(date)
   }
 
+  function nextDay(date) {
+    const [year, month, day] = date.split('-').map(Number)
+    const next = new Date(year, month - 1, day + 1)
+    return toISO(next.getFullYear(), next.getMonth(), next.getDate())
+  }
+
   const format = (value) => value ? new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' }).format(new Date(`${value}T00:00:00Z`)) : 'Select date'
 
   return <div className="mt-6 rounded-2xl border border-black/10 bg-white p-5 sm:p-6">
@@ -39,9 +46,23 @@ export default function DatePicker({ checkIn, checkOut, setCheckIn, setCheckOut,
         const selected = date === checkIn || date === checkOut
         const inRange = checkIn && checkOut && date > checkIn && date < checkOut
         const past = date < today
-        return <button key={date} type="button" disabled={past} onClick={() => choose(date)} aria-pressed={selected} className={`mx-auto grid h-10 w-10 place-items-center rounded-full text-sm transition ${selected ? 'bg-[#253c32] text-white' : inRange ? 'rounded-none bg-[#e7ece7] text-[#253c32]' : 'hover:bg-[#f0efe9]'} ${past ? 'cursor-not-allowed text-black/20' : ''}`}>{day}</button>
+        const choosingCheckout = Boolean(checkIn && !checkOut)
+        const occupied = isRoomDateOccupied(roomId, date)
+        const conflictsWithRange = choosingCheckout && date > checkIn && !isAvailable(roomId, checkIn, date)
+        const unavailable = occupied || conflictsWithRange
+        const disabled = past || date <= checkIn && choosingCheckout || unavailable
+        const stateStyle = occupied
+          ? 'border border-red-300 bg-red-100 font-semibold text-red-800 line-through'
+          : conflictsWithRange
+            ? 'border border-red-200 bg-red-50 text-red-700 line-through'
+            : selected ? 'bg-[#253c32] text-white'
+              : inRange ? 'rounded-none bg-[#e7ece7] text-[#253c32]'
+                : disabled ? 'text-black/25' : 'hover:bg-[#f0efe9]'
+        const description = occupied ? 'booked or blocked, unavailable' : conflictsWithRange ? 'unavailable for this stay' : ''
+        return <button key={date} type="button" disabled={disabled} onClick={() => choose(date)} aria-pressed={selected} aria-label={`${date}${description ? `, ${description}` : ''}`} title={description || undefined} className={`mx-auto grid h-10 w-10 place-items-center rounded-full text-sm transition ${stateStyle} ${disabled ? 'cursor-not-allowed' : ''}`}>{day}</button>
       })}
     </div>
-    <div className="mt-5 grid grid-cols-2 gap-3 border-t border-black/10 pt-4 text-[10px] text-[#77786f]"><p>Check-in <strong className="ml-1 font-medium text-[#222622]">2:00 PM</strong></p><p className="text-right">Check-out <strong className="ml-1 font-medium text-[#222622]">12:00 PM</strong></p></div>
+    <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-[10px] text-[#77786f]"><span className="inline-flex items-center gap-2"><span className="grid h-6 w-6 place-items-center rounded-full border border-red-300 bg-red-100 font-semibold text-red-800 line-through">8</span>Booked / blocked</span><span className="text-[#85877d]">Unavailable dates cannot be selected.</span></div>
+    <div className="mt-4 grid grid-cols-2 gap-3 border-t border-black/10 pt-4 text-[10px] text-[#77786f]"><p>Check-in <strong className="ml-1 font-medium text-[#222622]">2:00 PM</strong></p><p className="text-right">Check-out <strong className="ml-1 font-medium text-[#222622]">12:00 PM</strong></p></div>
   </div>
 }

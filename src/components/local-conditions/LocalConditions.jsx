@@ -37,7 +37,13 @@ export default function LocalConditions() {
 
   const time = new Intl.DateTimeFormat('en-GB', { timeZone: 'Africa/Lagos', hour: '2-digit', minute: '2-digit', hour12: true }).format(now)
   return <aside aria-label="Abuja local time and weather" className="absolute right-4 top-3 z-10 rounded-full border border-white/20 bg-black/25 px-3 py-2 text-white shadow-sm backdrop-blur-md sm:right-8 sm:top-4 sm:px-4">
-    <div className="flex items-center gap-2 sm:gap-3"><span className="font-[Playfair_Display] text-base tabular-nums sm:text-lg">{time}</span><span aria-hidden="true" className="h-4 w-px bg-white/30"/><span className="text-[10px] sm:text-xs">{weather ? `${Math.round(weather.temperature_2m)}°C · ${weatherName(weather.weather_code)}` : weatherError ? 'Weather unavailable' : 'Weather loading'}</span></div>
-    {weather?.apparent_temperature != null && <p className="mt-1 text-right text-[9px] text-white/60">Feels {Math.round(weather.apparent_temperature)}°C · <a href="https://open-meteo.com/en/license" target="_blank" rel="noreferrer" className="underline underline-offset-2">Open-Meteo</a></p>}
+    <div className="flex items-center gap-2 sm:gap-3">
+      <span className="font-[Playfair_Display] text-base tabular-nums sm:text-lg">{time}</span>
+      <span aria-hidden="true" className="h-4 w-px bg-white/30" />
+      <div className="flex items-center gap-2">
+        <span className="text-[10px] sm:text-xs">{weather ? `${Math.round(weather.temperature_2m)}\u00b0C \u00b7 ${weatherName(weather.weather_code)}` : weatherError ? 'Weather unavailable' : 'Weather loading'}</span>
+        {weather && <a href="https://open-meteo.com/en/license" target="_blank" rel="noreferrer" className="text-[9px] text-white/65 underline underline-offset-2">Open-Meteo</a>}
+      </div>
+    </div>
   </aside>
 }

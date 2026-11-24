@@ -72,18 +72,20 @@ export default function DatePicker({ roomId, checkIn, checkOut, setCheckIn, setC
         const selectedEnd = Boolean(checkOut && date === checkOut && !singleNight)
         const inRange = Boolean(checkIn && checkOut && !singleNight && date > checkIn && date < checkOut)
         const disabled = booked || past || beforeStart
-        const style = booked
+        const style = past
+          ? 'border border-[#deded8] bg-[#efefec] font-medium text-[#9b9c95]'
+          : booked
           ? 'border border-red-300 bg-red-100 font-semibold text-red-800 line-through'
           : selectedStart || selectedEnd
             ? 'bg-[#253c32] text-white'
             : inRange ? 'rounded-none bg-[#e7ece7] text-[#253c32]' : ''
-        return <button key={date} type="button" aria-disabled={disabled} aria-pressed={selectedStart || selectedEnd || inRange} aria-label={`${date}${booked ? ', booked / unavailable' : beforeStart ? ', before check-in' : ''}`} title={booked ? 'Booked / unavailable' : undefined} onClick={() => choose(date)} className={`group relative mx-auto grid h-10 w-10 place-items-center rounded-full text-sm transition ${style} ${disabled ? 'cursor-not-allowed' : 'hover:bg-[#f0efe9]'}`}>
+        return <button key={date} type="button" aria-disabled={disabled} aria-pressed={selectedStart || selectedEnd || inRange} aria-label={`${date}${booked ? ', booked / unavailable' : past ? ', past date' : beforeStart ? ', before check-in' : ''}`} title={booked ? 'Booked / unavailable' : past ? 'Past date' : undefined} onClick={() => choose(date)} className={`group relative mx-auto grid h-10 w-10 place-items-center rounded-full text-sm transition ${style} ${disabled ? 'cursor-not-allowed' : 'hover:bg-[#f0efe9]'}`}>
           {day}
           {booked && <span role="tooltip" className="pointer-events-none absolute bottom-full left-1/2 z-20 mb-2 w-32 -translate-x-1/2 rounded bg-[#253c32] px-2 py-1 text-[9px] font-normal text-white opacity-0 shadow transition group-hover:opacity-100 group-focus-visible:opacity-100">Booked / unavailable</span>}
         </button>
       })}
     </div>
-    <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-[10px] text-[#77786f]"><span className="inline-flex items-center gap-2"><span className="grid h-6 w-6 place-items-center rounded-full border border-red-300 bg-red-100 font-semibold text-red-800 line-through">8</span>Booked / unavailable</span><span>Click the selected check-in again to clear dates.</span></div>
+    <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-[10px] text-[#77786f]"><span className="inline-flex items-center gap-2"><span className="grid h-6 w-6 place-items-center rounded-full border border-red-300 bg-red-100 font-semibold text-red-800 line-through">8</span>Booked / unavailable</span><span className="inline-flex items-center gap-2"><span className="grid h-6 w-6 place-items-center rounded-full border border-[#deded8] bg-[#efefec] text-[#9b9c95]">8</span>Past date</span><span>Click the selected check-in again to clear dates.</span></div>
     {feedback && <p role="status" className="mt-3 text-xs text-[#9b3030]">{feedback}</p>}
     <div className="mt-5 grid grid-cols-2 gap-3 border-t border-black/10 pt-4 text-[10px] text-[#77786f]"><div>CHECK-IN<p className="mt-1 text-xs font-medium text-[#222622]">{checkIn ? `${formatDate(checkIn)} · 2:00 PM` : 'Select a date'}</p></div><div className="text-right">CHECK-OUT<p className="mt-1 text-xs font-medium text-[#222622]">{checkOut ? `${formatDate(checkOut)} · 12:00 PM` : 'Select a date'}</p></div></div>
   </div>

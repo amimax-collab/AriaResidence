@@ -2,7 +2,13 @@ import FAQ from '../../components/faq/FAQ'
 import { formatNaira } from '../../data/rooms'
 
 const mapUrl = 'https://maps.app.goo.gl/t8eYevwFug1v3uaM6?g_st=ic'
-const fullDate = (value) => new Intl.DateTimeFormat('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }).format(new Date(`${value}T00:00:00Z`))
+const ordinal = (day) => `${day}${day % 100 >= 11 && day % 100 <= 13 ? 'th' : ({ 1: 'st', 2: 'nd', 3: 'rd' }[day % 10] || 'th')}`
+const fullDate = (value) => {
+  const date = new Date(`${value}T00:00:00Z`)
+  const weekday = new Intl.DateTimeFormat('en-GB', { weekday: 'long', timeZone: 'UTC' }).format(date)
+  const month = new Intl.DateTimeFormat('en-GB', { month: 'long', timeZone: 'UTC' }).format(date)
+  return `${weekday} ${ordinal(date.getUTCDate())} ${month} ${date.getUTCFullYear()}`
+}
 
 export default function ConfirmationPage({ booking, room, setView }) {
   const paid = booking.paymentStatus === 'paid'
@@ -19,7 +25,7 @@ export default function ConfirmationPage({ booking, room, setView }) {
         <p className="text-[9px] uppercase tracking-[.17em] text-[#77786f]">Booking reference</p><p className="mt-1 font-[Playfair_Display] text-2xl">{booking.reference}</p>
         <div className="mt-6 space-y-4 border-t border-black/10 pt-5 text-sm">
           <p className="flex justify-between gap-4"><span>Residence</span><span className="text-right">{room.name}</span></p>
-          <div className="grid gap-4 sm:grid-cols-2"><div><p className="text-xs text-[#77786f]">CHECK-IN · 2:00 PM</p><p className="mt-1 font-medium">{fullDate(booking.checkIn)}</p></div><div><p className="text-xs text-[#77786f]">CHECK-OUT · 12:00 PM</p><p className="mt-1 font-medium">{fullDate(booking.checkOut)}</p></div></div>
+          <div className="grid gap-4 sm:grid-cols-2"><div><p className="text-xs text-[#77786f]">CHECK-IN</p><p className="mt-1 font-medium">{fullDate(booking.checkIn)} · 2:00 PM</p></div><div><p className="text-xs text-[#77786f]">CHECK-OUT</p><p className="mt-1 font-medium">{fullDate(booking.checkOut)} · 12:00 PM</p></div></div>
           <p className="flex justify-between border-t border-black/10 pt-4"><span>Guests</span><span>{booking.guests}</span></p>
           <p className="flex justify-between border-t border-black/10 pt-4 font-medium"><span>Total</span><span>{formatNaira(booking.total)}</span></p>
         </div>

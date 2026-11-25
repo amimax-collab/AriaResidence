@@ -14,7 +14,7 @@ export default function HomePage({ rooms, onDetails, onReserve, setView }) {
     <section className="relative isolate flex min-h-[min(780px,88svh)] items-center overflow-hidden bg-[#20241f] text-white">
       <BackgroundVideo/>
       <div className="absolute inset-0 -z-0 bg-gradient-to-r from-[#101611]/75 via-[#101611]/35 to-[#101611]/10"/>
-      <LocalConditions/>
+      
       <div className="relative z-10 mx-auto w-full max-w-7xl px-6 pb-16 pt-24 lg:px-10">
         <Reveal className="max-w-3xl">
           <p className="mb-6 flex items-center gap-3 text-[10px] uppercase tracking-[.28em] text-white/75"><span className="h-px w-8 bg-white/70"/>Aria Residence · Abuja, Nigeria</p>
@@ -23,7 +23,7 @@ export default function HomePage({ rooms, onDetails, onReserve, setView }) {
           <div className="mt-9 flex flex-wrap gap-3"><button onClick={() => document.getElementById('residences')?.scrollIntoView({behavior:'smooth'})} className="rounded-full bg-white px-7 py-4 text-xs text-[#253c32] transition duration-300 hover:-translate-y-1 hover:bg-[#e9ece6]">Explore residences <span className="ml-3">-&gt;</span></button><button onClick={() => document.getElementById('location')?.scrollIntoView({behavior:'smooth'})} className="rounded-full border border-white/60 px-7 py-4 text-xs text-white transition duration-300 hover:-translate-y-1 hover:bg-white/10">Find us in Abuja</button></div>
         </Reveal>
       </div>
-      <div className="absolute bottom-7 left-6 right-6 z-10 flex items-end justify-between text-[9px] uppercase tracking-[.2em] text-white/70 lg:left-10 lg:right-10"><span>Stay awhile</span><span className="hidden sm:block">A quieter kind of city stay</span><span>Abuja · 09° N</span></div>
+      <div className="absolute bottom-7 left-6 right-6 z-10 flex items-end justify-between text-[9px] uppercase tracking-[.2em] text-white/70 lg:left-10 lg:right-10"><span>Stay awhile</span><span className="hidden sm:block">A quieter kind of city stay</span><LocalConditions/></div>
     </section>
 
     <section className="mx-auto grid max-w-7xl gap-6 px-5 py-20 sm:grid-cols-[.7fr_1.3fr] sm:py-28 lg:px-10">

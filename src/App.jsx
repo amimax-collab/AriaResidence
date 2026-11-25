@@ -2,7 +2,7 @@
 import Header from './components/header/Header'
 import Footer from './components/footer/Footer'
 import WhatsAppButton from './components/whatsapp/WhatsAppButton'
-import { extras, getAvailableTodayCount, isAvailable, rooms } from './data/rooms'
+import { extras, getAvailableCount, isAvailable, rooms } from './data/rooms'
 import AboutPage from './pages/about/AboutPage'
 import AdminPage from './pages/admin/AdminPage'
 import ResidencesPage from './pages/residences/ResidencesPage'
@@ -37,13 +37,20 @@ export default function App() {
     if (!isAvailable(nextRoom.id, checkIn, checkOut)) { setNotice('Those dates are unavailable. Please choose another range.'); setView('details'); return }
     setNotice(''); setView('checkout'); window.scrollTo(0, 0)
   }
-  function submitBooking(e) {
-    e.preventDefault()
-    if (!idFile) { setNotice('Please attach your ID to continue.'); return }
-    const request = { ...guest, idNumber: `****${guest.idNumber.slice(-4)}`, roomId: room.id, checkIn, checkOut, guests, total, extras: selectedExtras, reference: `ARIA-${Math.random().toString(36).slice(2, 8).toUpperCase()}` }
+  // Saves the booking and shows the confirmation page.
+  // Call it with { status: 'confirmed', paymentStatus: 'paid', paymentRef } from your payment provider's
+  // success callback. Until payment is connected, bookings are saved as pending.
+  function saveBooking(extra = {}) {
+    if (!isAvailable(room.id, checkIn, checkOut)) { setNotice('Those dates were just taken. Please choose another range.'); setView('details'); return }
+    const request = { ...guest, idNumber: `****${guest.idNumber.slice(-4)}`, roomId: room.id, checkIn, checkOut, guests, total, extras: selectedExtras, status: 'pending', paymentStatus: 'unpaid', reference: `ARIA-${Math.random().toString(36).slice(2, 8).toUpperCase()}`, ...extra }
     const saved = JSON.parse(localStorage.getItem('aria-bookings') || '[]')
     localStorage.setItem('aria-bookings', JSON.stringify([...saved, request]))
     setBooking(request); setNotice(''); setView('confirmed'); window.scrollTo(0, 0)
+  }
+  function submitBooking(e) {
+    e.preventDefault()
+    if (!idFile) { setNotice('Please attach your ID to continue.'); return }
+    saveBooking()
   }
 
   const availableRooms = rooms.filter((item) => (!checkIn || item.guests >= guests) && isAvailable(item.id, checkIn, checkOut))
@@ -51,7 +58,7 @@ export default function App() {
   return <div className="min-h-screen bg-[#f8f7f4] font-[DM_Sans] text-[#222622]">
     <Header view={view} setView={setView}/>
     {view === 'home' && <HomePage rooms={rooms} onDetails={openDetails} onReserve={reserve} setView={setView}/>}
-    {view === 'stays' && <ResidencesPage rooms={availableRooms} availableToday={getAvailableTodayCount()} guests={guests} checkIn={checkIn} checkOut={checkOut} onDetails={openDetails} onReserve={reserve} setView={setView}/>}
+    {view === 'stays' && <ResidencesPage rooms={availableRooms} availableCount={getAvailableCount(checkIn || today)} checkIn={checkIn} onDetails={openDetails} onReserve={reserve} setView={setView}/>}
     {view === 'details' && <DetailsPage room={room} checkIn={checkIn} checkOut={checkOut} setCheckIn={setCheckIn} setCheckOut={setCheckOut} guests={guests} setGuests={setGuests} today={today} notice={notice} onReserve={() => reserve(room)} setView={setView}/>}
     {view === 'checkout' && <CheckoutPage room={room} dates={{checkIn,checkOut}} guests={guests} form={guest} setForm={setGuest} extrasSelected={selectedExtras} setExtrasSelected={setSelectedExtras} idFile={idFile} setIdFile={setIdFile} notice={notice} onSubmit={submitBooking} total={total} setView={setView}/>}
     {view === 'confirmed' && booking && <ConfirmationPage booking={booking} room={rooms.find((item) => item.id === booking.roomId) || room} setView={setView}/>}

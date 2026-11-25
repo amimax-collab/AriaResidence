@@ -1,7 +1,4 @@
-const address = 'The Aria Residence, 2962 John Agaba Street, Apo, Abuja 900104, Federal Capital Territory, Nigeria'
-const mapUrl = 'https://maps.app.goo.gl/t8eYevwFug1v3uaM6?g_st=ic'
-const phone = '09026851735'
-const whatsapp = '2349026851735'
+import { address, mapUrl, phone, whatsapp } from '../../data/contact'
 
 export default function ContactPage({ sent, setSent }) {
   function sendMessage(event) {
